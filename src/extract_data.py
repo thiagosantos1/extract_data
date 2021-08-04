@@ -29,14 +29,15 @@ def extract_diagnosis(path_to_excell:str, report_column_name:str, path_to_data_o
 	out_reports = []
 	for i in tqdm(range(data.shape[0]),desc ="Extracting Data"):
 		txt = data.iloc[i].lower()
-		txt = re.sub(' +', ' ', txt)
-		txt = re.sub('diagnosis :', 'diagnosis:', txt)
-		subs = "diagnosis: " + txt.split("diagnosis:")[-1]
-		
-		for flag in keywords_de_identiy:
-			if flag in subs:
-				out_reports.append(subs.split(flag)[0])
-				break
+		if "diagnosis" in txt:
+			txt = re.sub(' +', ' ', txt)
+			txt = re.sub('diagnosis :', 'diagnosis:', txt)
+			subs = "diagnosis: " + txt.split("diagnosis:")[-1]
+			
+			for flag in keywords_de_identiy:
+				if flag in subs:
+					out_reports.append(subs.split(flag)[0])
+					break
 
 	df = pd.DataFrame(out_reports,columns =[report_column_name])
 
